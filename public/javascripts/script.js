@@ -3,35 +3,47 @@
     webMailHttpRequest("inbox");
 })();
 
-
 function inboxButton(ev){
-    console.log("INBOX Button");
     //removes selected lass from all divs in mailbox div
-    //adds class selected to this id
     $("#mailbox>div").removeClass("selected");
+    //adds class selected to this id
     $("#"+ev.target.id).addClass("selected");
-//    httpRequest("inbox");   
-
+    // remove previous content
+    $("#mailList").remove();
+    // show loading circle
+    $("#loading").show(); 
+    
+    webMailHttpRequest("inbox");
 };
 
 function importantButton(ev){
-    console.log("IMPORTANT Button");
     $("#mailbox>div").removeClass("selected");
     $("#"+ev.target.id).addClass("selected");
+    $("#mailList").remove();
+    $("#loading").show(); 
+    
+    webMailHttpRequest("important");
 };
 
 function sentButton(ev){
-    console.log("SENT Button");
     $("#mailbox>div").removeClass("selected");
     $("#"+ev.target.id).addClass("selected");
+    $("#mailList").remove();
+    $("#loading").show(); 
+    
+    webMailHttpRequest("sent");
 };
 
 function trashButton(ev){
-    console.log("TRASH Button");
     $("#mailbox>div").removeClass("selected");
     $("#"+ev.target.id).addClass("selected");
+    $("#mailList").remove();
+    $("#loading").show(); 
+    
+    webMailHttpRequest("trash");
 };
 
+    
 // reqType - type of request
 function webMailHttpRequest(reqType) {
     
@@ -43,9 +55,8 @@ function webMailHttpRequest(reqType) {
 
     xmlhttp.onreadystatechange = function() {
         if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-            console.log("REQUEST OK");    
-            $("#loader").hide(); 
-            $("#mail").html(xmlhttp.responseText); 
+            $("#loading").hide(); 
+            $("#mail").append(xmlhttp.responseText); 
         }
     }
 }

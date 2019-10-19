@@ -3,24 +3,47 @@ html {
     padding: 0px;  
 }
 
+input{
+    width: 30px;
+    margin: 0px;
+}
+
+
 ul {
     list-style:none;
 }
 
 li:first-child {
+    padding-left: 30px; 
     font-weight: bold;
+}
+
+li:first-child:hover {
+    background-color:yellowgreen;
+    cursor:default;
+}
+
+
+li {
+    background-color: yellowgreen;
+    margin-bottom: 10px;
 }
 
 li {
     background-color: yellowgreen;
     margin-bottom: 10px;
-    
+}
+
+li:hover {
+    background-color:chocolate;
+    cursor: pointer;
 }
 
 span {
     display: inline-block;
-    width: 180px;
+    width: 220px;
 }
+
 
 #heading{
     width: auto;
