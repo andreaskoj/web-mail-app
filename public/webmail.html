@@ -8,14 +8,16 @@
     </head>
     <body>
         <div id="heading">
-            HEADING   
+            <h1>WebMail <i id="webmailIcon" class="material-icons">send</i></h1>  
         </div>
 
+        
         <div id="function">
-                    <button class="function-button">Compose</button>
-                    <button class="function-button">Move to</button>
-                    <button class="function-button right">&#62;</button>
-                    <button class="function-button right">&#60;</button>  
+            <button class="function-button">Compose</button>
+            <button class="function-button" onclick="moveToButton()">Move to</button>
+            <button class="right arrows" onclick="nextButton()"><i  class="material-icons">navigate_next</i></button>  
+            <button class="right arrows" onclick="previousButton()"><i  class="material-icons">navigate_before</i></button>
+    
         </div>
             <div class="row"> 
                 <div id="mailbox" class="column">
@@ -30,6 +32,9 @@
                 </div> 
         </div>
     </body>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet"> 
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script type="text/javascript" src="javascripts/script.js"></script>
 	

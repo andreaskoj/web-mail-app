@@ -1,13 +1,23 @@
 html {
-    margin: 0px;
+    font-family: 'Nunito', sans-serif;
+    margin-left: 10%;
+    margin-right: 10%;
     padding: 0px;  
+}
+
+button {
+    border: none;
+    margin: 0;
+    padding: 0;
+    width: auto;
+    overflow: visible;
+    background: transparent;
 }
 
 input{
     width: 30px;
     margin: 0px;
 }
-
 
 ul {
     list-style:none;
@@ -22,7 +32,6 @@ li:first-child:hover {
     background-color:yellowgreen;
     cursor:default;
 }
-
 
 li {
     background-color: yellowgreen;
@@ -46,44 +55,80 @@ span {
 
 
 #heading{
+    user-select: none;
+    text-align: center;
     width: auto;
-    padding: 20px;
+    padding: 10px;
     height: auto;
-    background-color: indigo;
+}
+#heading h1{
+    display: inline-block;
+    width: auto;
+}   
+
+#webmailIcon {
+    color: teal;
+    position: relative;
+    top: -5px;
+    transform: scale(1.25) rotate(-45deg);
 }
 
 #function {
-    width: audto;
+    position: relative;
+    bottom: -10px;
+    width: auto;
     padding: 20px;
+    padding-bottom: 30px;
     height: auto;
-    background-color:aqua;
+    background-color: gainsboro;
+    border-radius: 10px 10px 0px 0px;
 }
 
-.row {
-    display: flex;
+#prevID, #nextID {
+    display: none;    
 }
 
 #mailbox { 
-    flex:30%;
+    flex:10%;
     padding: 20px;
     height: auto;
-    background-color: teal;
+    background-color: gainsboro;
 }
 
 #mail {
+    border-radius: 10px 0px 0px 0px; 
     position: relative;
     flex:70%;
     height: auto;
     background-color: turquoise;
 }
 
+.arrows{
+    color: teal;
+    transform: scale(1.5);
+    margin-left: 10px;
+}
+
+.arrows:hover {
+    color: teal;
+    cursor: pointer;
+    transform: scale(1.8);
+}
+
+.email-line{
+    display: inline-block;
+}
+.row {
+    display: flex;
+}
+
 .mailbox-button {
     text-align: center;
     vertical-align: middle;
-    line-height: 90px;  
+    line-height: 30px;  
     background-color:darkseagreen;
     display: block;
-    height: 90px;
+    height: 30px;
     width: 100%;
     margin-bottom: 20px;
 }
@@ -143,7 +188,6 @@ span {
       transform:rotate(360deg);
     }
 }
-
 
 .right {
     float: right;
