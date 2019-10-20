@@ -53,7 +53,6 @@ span {
     width: 220px;
 }
 
-
 #heading{
     user-select: none;
     text-align: center;
@@ -88,18 +87,13 @@ span {
     display: none;    
 }
 
-#mailbox { 
-    flex:10%;
-    padding: 20px;
-    height: auto;
-    background-color: gainsboro;
-}
+
 
 #mail {
     border-radius: 10px 0px 0px 0px; 
     position: relative;
     flex:70%;
-    height: auto;
+    height: 540px;
     background-color: turquoise;
 }
 
@@ -122,20 +116,38 @@ span {
     display: flex;
 }
 
+#mailbox {
+    text-align: center;
+    font-size: 25px;
+    flex:10%;
+    padding: 20px;
+    padding-top: 30px;
+    height: 500px;
+    background-color: gainsboro;
+    border-radius: 0px 0px 0px 10px;
+}
+
 .mailbox-button {
+    margin: auto;
+    border-bottom: 3px solid;
+    border-bottom-color: transparent;
     text-align: center;
     vertical-align: middle;
     line-height: 30px;  
-    background-color:darkseagreen;
     display: block;
     height: 30px;
-    width: 100%;
     margin-bottom: 20px;
+/*    background-color: bisque;*/
+}
+.mailbox-button:hover {
+    cursor: pointer;
+    border-bottom: 3px solid;
+        
 }
 
 .selected {
     font-weight: bold;
-    color: red;
+    color: teal;
 }
 
 /*loading bar*/
