@@ -13,18 +13,18 @@
 
         
         <div id="function">
-            <button class="function-button">Compose</button>
-            <button class="function-button" onclick="moveToButton()">Move to</button>
+            <button id="composeButton" class="function-button">Compose</button>
+            <button id="moveToButton" class="function-button">Move to</button>
             <button class="right arrows" onclick="nextButton()"><i  class="material-icons">navigate_next</i></button>  
             <button class="right arrows" onclick="previousButton()"><i  class="material-icons">navigate_before</i></button>
     
         </div>
             <div class="row"> 
                 <div id="mailbox" class="column">
-                    <div id="inboxButton" class="mailbox-button selected" onclick="inboxButton(event)"><i  class="material-icons">call_received</i>Inbox</div>
-                    <div id="importantButton" class="mailbox-button" onclick="importantButton(event)">Important</div>
-                    <div id="sentButton" class="mailbox-button" onclick="sentButton(event)">Sent</div>
-                    <div id="trashButton" class="mailbox-button" onclick="trashButton(event)">Trash</div>
+                    <div id="inboxButton" class="mailbox-button selected"><i  class="material-icons">call_received</i>Inbox</div>
+                    <div id="importantButton" class="mailbox-button" >Important</div>
+                    <div id="sentButton" class="mailbox-button">Sent</div>
+                    <div id="trashButton" class="mailbox-button">Trash</div>
                 </div>
                 
                 <div id="mail" >

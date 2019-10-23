@@ -1,57 +1,100 @@
-// init self invoking function which fetches inbox emails
-(function () {
-    webMailHttpRequest("retriveemaillist?type=Inbox");
-})();
+// global list with email IDs from current scope
+var emailListID = [];
 
-function inboxButton(ev){
+function openMail(ev, emailID) {
+    $("#mailList").remove();
+    $("#mailContent").remove();
+    webMailHttpRequest("getmail?id="+emailID);
+};  
+
+// reqType - type of request
+function webMailHttpRequest(reqType) {
+    var xmlhttp = new XMLHttpRequest();
+    
+//    console.log(reqType);
+//    
+    xmlhttp.open("GET",reqType, true);
+    xmlhttp.send();
+
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+            $("#loading").hide(); 
+            
+//            var responseJSON = JSON.parse(xmlhttp.response);
+            
+//            console.log(responseJSON["emailListID"]);
+            
+            $("#mail").append(xmlhttp.responseText);
+//            global = xmlhttp.responseText;
+        }
+    }
+}
+
+$(document).ready(function(){
+
+webMailHttpRequest("retriveemaillist?type=Inbox");
+    
+$("#composeButton").click(function(){
+        console.log("test compose");      
+});    
+    
+$("#moveToButton").click(function(){
+        console.log("test moveTo");  
+    console.log(global);
+});    
+        
+$("#inboxButton").click(function(){
     //removes selected lass from all divs in mailbox div
     $("#mailbox>div").removeClass("selected");
-    //adds class selected to this id
-    $("#"+ev.target.id).addClass("selected");
-    // remove mail list 
+    //adds class selected to this id    
+    $(this).addClass("selected");
+    // remove mail list     
     $("#mailList").remove();
-    // remove mail content
+    // remove mail content    
     $("#mailContent").remove();
     // show loading circle
     $("#loading").show(); 
-    
+
     webMailHttpRequest("retriveemaillist?type=Inbox");
-};
+});   
 
-function importantButton(ev){
+$("#importantButton").click(function(){
+
     $("#mailbox>div").removeClass("selected");
-    $("#"+ev.target.id).addClass("selected");
+    $(this).addClass("selected");
     $("#mailList").remove();
     $("#mailContent").remove();
     $("#loading").show(); 
     
-    webMailHttpRequest("retriveemaillist?type=Important");
-};
+    webMailHttpRequest("retriveemaillist?type=Important");   
+});    
 
-function sentButton(ev){
+$("#sentButton").click(function(){
+
     $("#mailbox>div").removeClass("selected");
-    $("#"+ev.target.id).addClass("selected");
+    $(this).addClass("selected");
     $("#mailList").remove();
     $("#mailContent").remove();
     $("#loading").show(); 
     
-    webMailHttpRequest("retriveemaillist?type=Sent");
-};
+    webMailHttpRequest("retriveemaillist?type=Sent");  
+});     
 
-function trashButton(ev){
+$("#trashButton").click(function(){
+
     $("#mailbox>div").removeClass("selected");
-    $("#"+ev.target.id).addClass("selected");
+    $(this).addClass("selected");
     $("#mailList").remove();
     $("#mailContent").remove();
     $("#loading").show(); 
     
-    webMailHttpRequest("retriveemaillist?type=Trash");
-};
+    webMailHttpRequest("retriveemaillist?type=Trash");   
+}); 
 
-function moveToButton(ev) {
-    console.log("clicked!");
-}
-
+  
+    
+    
+    
 //logic for previous button 
 function previousButton(ev) {
     // check if the mail details view is on the screen
@@ -85,22 +128,8 @@ function nextButton(ev) {
     }  
 };
 
-function openMail(ev, emailID) {
-    $("#mailList").remove();
-    $("#mailContent").remove();
-    webMailHttpRequest("getmail?id="+emailID);
-};
- 
-// reqType - type of request
-function webMailHttpRequest(reqType) {
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("GET",reqType, true);
-    xmlhttp.send();
 
-    xmlhttp.onreadystatechange = function() {
-        if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-            $("#loading").hide(); 
-            $("#mail").append(xmlhttp.responseText); 
-        }
-    }
-}
+ 
+
+
+});

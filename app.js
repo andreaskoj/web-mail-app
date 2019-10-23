@@ -23,7 +23,7 @@ app.use(express.static('public', {index: 'webmail.html'}), function(req,res,next
     next();
 })
 
-// display mailboxes
+// display list of emails
 app.get('/retriveemaillist', function(req, res){
     var db = req.db;
     var collection = db.get('emailList');
@@ -37,12 +37,15 @@ app.get('/retriveemaillist', function(req, res){
             for(var i=0; i<docs.length; i++) {
                 req.session.mailList.push(docs[i]["_id"]);
             }
-            res.send(emailListResponseHTML(docs));
+            
+            var emailListResponse = emailListResponseHTML(docs);
+//            res.send({response: emailListResponse, emailListID: "test"});
+            res.send(emailListResponse);
         } else console.log(err);
     });
 });
 
-//display email content and pass data about next and previous email
+//display specific email 
 app.get('/getmail', function(req, res){
     var db = req.db;
     var collection = db.get('emailList');
@@ -62,10 +65,12 @@ function prepareIDs(mailList, currentID) {
     var prevID;
     var nextID;
 
+    // if the id position is 0 then only assign next ID
     if(currentID == 0) {
         nextID = mailList[currentPostionID+1];
         prevID = undefined;
     }
+    // if the current id is the last one the assign only last ID
     else if(currentID == mailList.length-1) {
         prevID = mailList[currentPostionID-1];
         nextID = undefined;
