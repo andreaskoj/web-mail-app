@@ -1,9 +1,12 @@
 // global list with email IDs from current scope
 var emailListID = [];
+var currentPage= 2;
+var composeHTML = 
+    "<div class='box'><h3>Compose a new email</h3> To:<textarea></textarea> <br>Subject:<textarea></textarea><br> <textarea></textarea><br><button>Send</button></div>"
 
 function openMail(ev, emailID) {
-    $("#mailList").remove();
-    $("#mailContent").remove();
+    $(".box").remove();
+//    $("#mailContent").remove();
     webMailHttpRequest("getmail?id="+emailID);
 };  
 
@@ -32,104 +35,118 @@ function webMailHttpRequest(reqType) {
 
 $(document).ready(function(){
 
-webMailHttpRequest("retriveemaillist?type=Inbox");
-    
-$("#composeButton").click(function(){
-        console.log("test compose");      
-});    
-    
-$("#moveToButton").click(function(){
+    webMailHttpRequest("retriveemaillist?type=Inbox&page=" +currentPage);
+
+    $("#composeButton").click(function(){
+        
+        $(".box").remove();
+        $("#mail").append(composeHTML);
+
+        console.log("test compose");   
+    });    
+
+    $("#moveToButton").click(function(){
         console.log("test moveTo");  
-    console.log(global);
-});    
+        console.log(global);
+    });    
+
+//    $(".email-line").click(function(){
+//        $(".box").remove();
+//        
+//        
+//        webMailHttpRequest("getmail?id="+emailID);
+//    });
+    
+    $("#inboxButton").click(function(){
+        $("#mailbox>div").removeClass("selected");
+        $(this).addClass("selected");
+        $(".box").remove();
+        $("#loading").show(); 
+
+        webMailHttpRequest("retriveemaillist?type=Inbox");
+    });   
+
+    $("#importantButton").click(function(){
+
+        $("#mailbox>div").removeClass("selected");
+        $(this).addClass("selected");
+        $(".box").remove();
+//        $("#mailContent").remove();
+        $("#loading").show(); 
+
+        webMailHttpRequest("retriveemaillist?type=Important");   
+    });    
+
+    $("#sentButton").click(function(){
+
+        $("#mailbox>div").removeClass("selected");
+        $(this).addClass("selected");
+        $(".box").remove();
+//        $("#mailContent").remove();
+        $("#loading").show(); 
+
+        webMailHttpRequest("retriveemaillist?type=Sent");  
+    });     
+
+    $("#trashButton").click(function(){
+
+        $("#mailbox>div").removeClass("selected");
+        $(this).addClass("selected");
+        $(".box").remove();
+//        $("#mailContent").remove();
+        $("#loading").show(); 
+
+        webMailHttpRequest("retriveemaillist?type=Trash");   
+    }); 
+
+    $("#previousButton").click(function(){
         
-$("#inboxButton").click(function(){
-    //removes selected lass from all divs in mailbox div
-    $("#mailbox>div").removeClass("selected");
-    //adds class selected to this id    
-    $(this).addClass("selected");
-    // remove mail list     
-    $("#mailList").remove();
-    // remove mail content    
-    $("#mailContent").remove();
-    // show loading circle
-    $("#loading").show(); 
+        if($("#mailContent").length){
+            console.log("mail ")
 
-    webMailHttpRequest("retriveemaillist?type=Inbox");
-});   
+        }
 
-$("#importantButton").click(function(){
-
-    $("#mailbox>div").removeClass("selected");
-    $(this).addClass("selected");
-    $("#mailList").remove();
-    $("#mailContent").remove();
-    $("#loading").show(); 
-    
-    webMailHttpRequest("retriveemaillist?type=Important");   
-});    
-
-$("#sentButton").click(function(){
-
-    $("#mailbox>div").removeClass("selected");
-    $(this).addClass("selected");
-    $("#mailList").remove();
-    $("#mailContent").remove();
-    $("#loading").show(); 
-    
-    webMailHttpRequest("retriveemaillist?type=Sent");  
-});     
-
-$("#trashButton").click(function(){
-
-    $("#mailbox>div").removeClass("selected");
-    $(this).addClass("selected");
-    $("#mailList").remove();
-    $("#mailContent").remove();
-    $("#loading").show(); 
-    
-    webMailHttpRequest("retriveemaillist?type=Trash");   
-}); 
-
-  
-    
-    
-    
-//logic for previous button 
-function previousButton(ev) {
-    // check if the mail details view is on the screen
-    if($("#mailContent").length){
-        var prev =$("#prevID").html(); 
-        
-        if (prev != "undefined"){
-            openMail(ev,prev);
-        }    
-    }
-    
-    else {
-        // implement witching pages of emails
-        console.log("mail view list")
-    }
-};
-
-//logic for next button
-function nextButton(ev) {
-    if($("#mailContent").length){
-        var next = $("#nextID").html(); 
-    
-        if (next != "undefined"){
-            openMail(ev,next);
-        }           
-    }
-    
-    else{
-        // implement witching pages of emails
-        console.log("mail view list")
-    }  
-};
+        else {
+            // implement witching pages of emails
+            console.log("mail list")
+        }
+         
+    });
 
 
- 
+
+//    //logic for previous button 
+//    function previousButton(ev) {
+//        // check if the mail details view is on the screen
+//        if($("#mailContent").length){
+//            var prev =$("#prevID").html(); 
+//
+//            if (prev != "undefined"){
+//                openMail(ev,prev);
+//            }    
+//        }
+//
+//        else {
+//            // implement witching pages of emails
+//            console.log("mail view list")
+//        }
+//    };
+
+    //logic for next button
+    function nextButton(ev) {
+        if($("#mailContent").length){
+            var next = $("#nextID").html(); 
+
+            if (next != "undefined"){
+                openMail(ev,next);
+            }           
+        }
+
+        else{
+            // implement witching pages of emails
+            console.log("mail view list")
+        }  
+    };
 
 
 });

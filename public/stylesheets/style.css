@@ -97,13 +97,26 @@ span {
     background-color: turquoise;
 }
 
+#composeButton:hover {
+    font-weight: bold;
+}
+
+#moveToButton:hover{
+    font-weight: bold;
+}
 .arrows{
+    outline: none;
     color: teal;
     transform: scale(1.5);
     margin-left: 10px;
 }
+.arrows:focus{
+    outline: none;
+
+}
 
 .arrows:hover {
+    
     color: teal;
     cursor: pointer;
     transform: scale(1.8);

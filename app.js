@@ -4,6 +4,9 @@ var monk = require('monk');
 var db = monk('localhost:27017/data');
 var session = require('express-session')
 
+// constants
+var EMAILS_ON_PAGE = 2;
+
 var server = app.listen(8081, function () {
   var host = server.address().address;
   var port = server.address().port;
@@ -28,17 +31,24 @@ app.get('/retriveemaillist', function(req, res){
     var db = req.db;
     var collection = db.get('emailList');
     var type = req.query.type;
+    var pageNo = parseInt(req.query.page);
+    console.log(pageNo);
        
     collection.find({mailbox: type}, {}, function(err, docs){
         if (err === null){
             
-            //create list of ids and store it in session 
-            req.session.mailList = [];
-            for(var i=0; i<docs.length; i++) {
-                req.session.mailList.push(docs[i]["_id"]);
-            }
+            // slice to get only one page 
+            var page = docs.slice(EMAILS_ON_PAGE*(pageNo-1),EMAILS_ON_PAGE*pageNo)
             
-            var emailListResponse = emailListResponseHTML(docs);
+            console.log(page);
+            
+            //create list of ids and store it in session 
+//            req.session.mailList = [];
+//            for(var i=0; i<docs.length; i++) {
+//                req.session.mailList.push(docs[i]["_id"]);
+//            }
+            
+            var emailListResponse = emailListResponseHTML(page);
 //            res.send({response: emailListResponse, emailListID: "test"});
             res.send(emailListResponse);
         } else console.log(err);
@@ -85,7 +95,7 @@ function prepareIDs(mailList, currentID) {
 // create view for specific email
 function emailContentResponseHTML(data, ids){
     var responseString = "";
-    responseString += "<div id='mailContent'>"
+    responseString += "<div id='mailContent' class='box'>"
     responseString += "<p>"+data[0]['title']+"</p>";
     responseString += "<p>"+data[0]['time']+"</p>";
     responseString += "<p>"+data[0]['sender']+"</p>";
@@ -100,7 +110,7 @@ function emailContentResponseHTML(data, ids){
 // create list of emails view
 function emailListResponseHTML(data) {
     
-    var responseString ="<ul id='mailList'>";
+    var responseString ="<ul id='mailList' class='box'>";
     
     responseString += "<li><span>Recipient</span><span>Title</span><span>Time</span></li>"
     

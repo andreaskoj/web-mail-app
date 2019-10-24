@@ -10,18 +10,17 @@
         <div id="heading">
             <h1>WebMail <i id="webmailIcon" class="material-icons">send</i></h1>  
         </div>
-
         
         <div id="function">
             <button id="composeButton" class="function-button">Compose</button>
             <button id="moveToButton" class="function-button">Move to</button>
-            <button class="right arrows" onclick="nextButton()"><i  class="material-icons">navigate_next</i></button>  
-            <button class="right arrows" onclick="previousButton()"><i  class="material-icons">navigate_before</i></button>
+            <button id="nexButton" class="right arrows" onclick="nextButton()"><i class="material-icons">navigate_next</i></button>  
+            <button id="previousButton" class="right arrows"><i class="material-icons">navigate_before</i></button>
     
         </div>
             <div class="row"> 
                 <div id="mailbox" class="column">
-                    <div id="inboxButton" class="mailbox-button selected"><i  class="material-icons">call_received</i>Inbox</div>
+                    <div id="inboxButton" class="mailbox-button selected"><i class="material-icons">call_received</i>Inbox</div>
                     <div id="importantButton" class="mailbox-button" >Important</div>
                     <div id="sentButton" class="mailbox-button">Sent</div>
                     <div id="trashButton" class="mailbox-button">Trash</div>
