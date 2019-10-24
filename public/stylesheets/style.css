@@ -94,7 +94,7 @@ span {
     position: relative;
     flex:70%;
     height: 540px;
-    background-color: turquoise;
+    background-color: whitesmoke;
 }
 
 #composeButton:hover {
@@ -105,6 +105,8 @@ span {
     font-weight: bold;
 }
 .arrows{
+    user-select: none;
+    float: right;
     outline: none;
     color: teal;
     transform: scale(1.5);
@@ -214,6 +216,3 @@ span {
     }
 }
 
-.right {
-    float: right;
-}
