@@ -6,56 +6,39 @@ var currentMailbox = "";
 var composeHTML = 
     "<div class='box'><h3>Compose a new email</h3> To:<textarea></textarea> <br>Subject:<textarea></textarea><br> <textarea></textarea><br><button>Send</button></div>"
 
-function openMail(ev, emailID) {
-    $(".box").remove();
-//    $("#mailContent").remove();
-    webMailHttpRequest("getmail?id="+emailID);
-};  
+function openMail(emailID) {
 
-//// reqType - type of request
-//function webMailHttpRequest(reqType) {
-//    var xmlhttp = new XMLHttpRequest();
-//    
-//    xmlhttp.open("GET",reqType, true);
-//    xmlhttp.send();
-//
-//    xmlhttp.onreadystatechange = function() {
-//        if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-//            $("#loading").hide(); 
-//            var responseJSON = JSON.parse(xmlhttp.response);
-//            
-//            console.log("tesst");
-//            console.log(responseJSON);
-//            // parsing to JSON format 
-//            
-////            console.log(responseJSON["emailListID"]);
-//            
-////            $("#mail").append(xmlhttp.responseText);
-//            $("#mail").append(emailListResponseHTML(responseJSON));
-////            global = xmlhttp.responseText;
-//        }
-//    }
-//}
+    $(".box").remove();
+    $.get("getmail?id="+emailID , function(data){
+
+            $("#loading").hide();
+            $("#mail").append(emailContentResponseHTML(data));
+        });
+};
+
+function emailContentResponseHTML(data){
+    
+    var responseString = "";
+    responseString += "<div id='mailContent' class='box'>"
+    responseString += "<p>"+data[0]['title']+"</p>";
+    responseString += "<p>"+data[0]['time']+"</p>";
+    responseString += "<p>"+data[0]['sender']+"</p>";
+    responseString += "<p>"+data[0]['recipient']+"</p>";
+    responseString += "<p>"+data[0]['content']+"</p>";
+    responseString += "<p id='hiddenID'>"+data[0]['_id']+"</p>";    
+    responseString += "</div>";
+    return responseString;      
+}; 
 
 $(document).ready(function(){
+    
+    // retrive initial email llist
     retriveEmailList("Inbox");
     
-    
-// intially tigger inboxButton to open inbox
-//    $("#inboxButton").trigger("click");
-//    $.get("retriveemaillist?type=Inbox&page=" +currentPage, function(data){
-//        $("#loading").hide();         
-//        $("#mail").append(emailListResponseHTML(data));
-//    });
-    
-//    webMailHttpRequest("retriveemaillist?type=Inbox&page=" +currentPage);
-
     $("#composeButton").click(function(){
         
         $(".box").remove();
         $("#mail").append(composeHTML);
-
-        console.log("test compose");   
     });    
 
     $("#moveToButton").click(function(){
@@ -107,7 +90,20 @@ $(document).ready(function(){
     $("#previousButton").click(function(){
         
         if($("#mailContent").length){
-            console.log("mail");
+            var currentID = $("#hiddenID").html();
+            var currentPostion = emailList.indexOf(currentID);
+            var emailListLen = emailList.length;
+            console.log("cp -> " + currentPostion);
+            console.log("len -> " + 0);
+            if(currentPostion == 0){
+                return;
+            }
+            console.log("and here");
+
+            $.get("getmail?id="+emailList[currentPostion-1], function(data){
+                    $(".box").remove();
+                    $("#mail").append(emailContentResponseHTML(data));
+                  })
         }
 
         else {
@@ -122,10 +118,22 @@ $(document).ready(function(){
     
     $("#nextButton").click(function(){
         if($("#mailContent").length){
-            console.log("mail")
+
+            var currentID = $("#hiddenID").html();
+            var currentPostion = emailList.indexOf(currentID);
+            var emailListLen = emailList.length;
+            
+            if(currentPostion + 1 >= emailListLen){
+                return;
+            }
+            
+            $.get("getmail?id="+emailList[currentPostion+1], function(data){
+                    $(".box").remove();
+                    $("#mail").append(emailContentResponseHTML(data));
+                  })
         }
 
-        else{
+        else {
             if(currentPage == pagesQty){
                 return;
             }
@@ -135,7 +143,7 @@ $(document).ready(function(){
             retriveEmailList(currentMailbox);
         }  
     });
-    
+ 
     // create list of emails view
     function emailListResponseHTML(data) {
 
@@ -146,11 +154,12 @@ $(document).ready(function(){
         for (var i = 0; i < data.length; i++) {
 
             var email = data[i];
+            
             var emaiID = '"';
             emaiID += email["_id"];
             emaiID += '"';
 
-            responseString += "<li><input type='checkbox'><div class='email-line' onclick='openMail(event,"+emaiID+")'><span>";
+            responseString += "<li><input type='checkbox'><div class='email-line' onclick='openMail("+emaiID+")' ><span>";
             responseString += email['recipient'];
             responseString +="</span><span>"
             responseString += email['title'];
@@ -158,20 +167,29 @@ $(document).ready(function(){
             responseString += email['time'];
             responseString +="</span></div>";
             responseString += "</li>";
-
         }
+        
         responseString += "</ul>";
+                
         return responseString;
-    };    
-
+    };  
+    
     function retriveEmailList(type){
         currentMailbox = type;
         $.get("retriveemaillist?type="+type+"&page=" +currentPage, function(data){
             $("#loading").hide();
-            emailList = data;
+            
+            // update ids
+            emailList=[];
+            data["response"].forEach(function(element){
+                emailList.push(element['_id']);
+            }) 
+            
             pagesQty = data["pagesQty"]; $("#mail").append(emailListResponseHTML(data["response"]));
         });
     };
+    
+    
 
     
 });
