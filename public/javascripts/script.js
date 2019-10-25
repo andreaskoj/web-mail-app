@@ -5,7 +5,7 @@ var currentPage = 1;
 var pagesQty;
 var currentMailbox = "";
 var composeHTML = 
-    "<div class='box'><h3>Compose a new email</h3> To:<textarea></textarea> <br>Subject:<textarea></textarea><br> <textarea></textarea><br><button>Send</button></div>"
+    "<div class='box'><h3>Compose a new email</h3> To:<textarea id='taTo'></textarea> <br>Subject:<textarea id='taSubject'></textarea><br><textarea id='taContent'></textarea><br><button id='btSend'>Send</button></div>"
 
 function openMail(emailID) {
 
@@ -17,9 +17,7 @@ function openMail(emailID) {
             
             var currentID = $("#hiddenID").html();
             var currentPostion = emailListID.indexOf(currentID);
-            var emailListLen = emailList.length;
-            
-            console.log("POS: " + currentPostion +"| LEN: " + (emailListLen-1));
+            var emailListLen = emailList.length;            
         });
 };
 
@@ -41,9 +39,26 @@ $(document).ready(function(){
     
     // retrive initial email llist
     retriveEmailList("Inbox");
+    $("#inboxButton").addClass("selected");    
+
+    //dynamically generated object;
+    $('#mail').on('click', '#btSend', function() {
+        
+           var to = $("#taTo").val();
+           var subject = $("#taSubject").val();
+           var content = $("#taContent").val();
+
+            console.log(to);
+            console.log(subject);
+            console.log(content);
+        
+        $.post( "sendemail", { to: to, subject: subject, content: content}, function(data){
+            
+            
+            });
+    });
     
     $("#composeButton").click(function(){
-        
         $(".box").remove();
         $("#mail").append(composeHTML);
     });    
@@ -58,7 +73,6 @@ $(document).ready(function(){
         $("#mailbox>div").removeClass("selected");
         $(this).addClass("selected");
         $(".box").remove();
-        $("#loading").show(); 
 
         retriveEmailList("Inbox");
     });   
@@ -68,7 +82,6 @@ $(document).ready(function(){
         $("#mailbox>div").removeClass("selected");
         $(this).addClass("selected");
         $(".box").remove();
-        $("#loading").show(); 
 
         retriveEmailList("Important");
     });    
@@ -78,7 +91,6 @@ $(document).ready(function(){
         $("#mailbox>div").removeClass("selected");
         $(this).addClass("selected");
         $(".box").remove();
-        $("#loading").show(); 
 
         retriveEmailList("Sent");
     });     
@@ -88,7 +100,6 @@ $(document).ready(function(){
         $("#mailbox>div").removeClass("selected");
         $(this).addClass("selected");
         $(".box").remove();
-        $("#loading").show(); 
         
         retriveEmailList("Trash");
     }); 
@@ -98,27 +109,35 @@ $(document).ready(function(){
         
         if($("#mailContent").length){
             var currentID = $("#hiddenID").html();
-            var currentPostion = emailList.indexOf(currentID);
+            var currentPostion = emailListID.indexOf(currentID);
             var emailListLen = emailList.length;
+                              
             if(currentPostion == 0){
-                console.log("no previous page");
-                
-                return;
-                
-                // if its the first page, don't fetch previous
+                                
                 if(currentPage == 1){
-                    console.log("no more pages <-")
 
                     return;
                 }
-            }
-
-            $.get("getmail?id="+emailList[currentPostion-1], function(data){
-                    $(".box").remove();
-                    $("#mail").append(emailContentResponseHTML(data));
-                  })
+                
+                currentPage--;
+                $.get("retriveemaillist?type="+currentMailbox+"&page="+currentPage, function(data){
+                        emailList = data["response"];
+                    
+                // update ids
+                emailListID=[];
+                data["response"].forEach(function(element){
+                    emailListID.push(element['_id']);
+                }) 
+                        $(".box").remove();
+                      $("#mail").append(emailContentResponseHTML(emailList[emailListID.length-1]));   
+                });                
+            }   
+            else {
+                $(".box").remove();
+                $("#mail").append(emailContentResponseHTML(emailList[currentPostion-1]));                
+            }        
         }
-
+        // email list 
         else {
             if(currentPage == 1){
                 return;
@@ -136,14 +155,12 @@ $(document).ready(function(){
             var currentID = $("#hiddenID").html();
             var currentPostion = emailListID.indexOf(currentID);
             var emailListLen = emailList.length;
-                                console.log(emailList);
 
             if(currentPostion == emailListLen-1) {
                 
-                if(currentPage ==pagesQty){
+                if(currentPage == pagesQty){
                     return;
                 }
-                console.log("this is lat page");
                 currentPage++;
                 $.get("retriveemaillist?type="+currentMailbox+"&page="+currentPage, function(data){
                         emailList = data["response"];
@@ -153,7 +170,6 @@ $(document).ready(function(){
                 data["response"].forEach(function(element){
                     emailListID.push(element['_id']);
                 }) 
-                    console.log(emailList);
                         $(".box").remove();
                       $("#mail").append(emailContentResponseHTML(emailList[0]));   
                 });
@@ -162,19 +178,18 @@ $(document).ready(function(){
             else{
                 $(".box").remove();
                 $("#mail").append(emailContentResponseHTML(emailList[currentPostion+1]));            
-                console.log("POS: " + (currentPostion+1) +"| LEN: " + (emailListLen-1));
+
             }
         }
 
         else {
-            console.log("lol");
             if(currentPage == pagesQty){
                 return;
             }
             // increment page number 
             currentPage ++;
             $(".box").remove();
-//            retriveEmailList(currentMailbox);
+            retriveEmailList(currentMailbox);
         }  
     });
  
@@ -202,7 +217,6 @@ $(document).ready(function(){
             responseString +="</span></div>";
             responseString += "</li>";
         }
-        
         responseString += "</ul>";                
         return responseString;
     };  
@@ -223,10 +237,6 @@ $(document).ready(function(){
             pagesQty = data["pagesQty"]; $("#mail").append(emailListResponseHTML(data["response"]));
         });
     };
-    
-    
-    
 
-    
 });
 

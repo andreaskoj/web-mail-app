@@ -14,13 +14,20 @@ button {
     background: transparent;
 }
 
+.box{
+    margin-left: 50px;
+    margin-top: 30px;
+}
+
 input{
     width: 30px;
     margin: 0px;
 }
 
 ul {
+    font-size: 22px;
     list-style:none;
+    padding: 0px;
 }
 
 li:first-child {
@@ -29,28 +36,31 @@ li:first-child {
 }
 
 li:first-child:hover {
-    background-color:yellowgreen;
     cursor:default;
+    background: none;
 }
 
 li {
-    background-color: yellowgreen;
+    padding: 5px;
+    border-radius: 5px;
     margin-bottom: 10px;
+    display: inline-block;
+  
+    
 }
 
 li {
-    background-color: yellowgreen;
     margin-bottom: 10px;
 }
 
 li:hover {
-    background-color:chocolate;
+    background-color: gainsboro;  
     cursor: pointer;
 }
 
 span {
     display: inline-block;
-    width: 220px;
+    width: 300px;
 }
 
 #heading{
@@ -87,24 +97,52 @@ span {
     display: none;    
 }
 
-
-
 #mail {
     border-radius: 10px 0px 0px 0px; 
     position: relative;
     flex:70%;
-    height: 540px;
+    height: 550px;
     background-color: whitesmoke;
 }
-
+#composeButton{
+    width: 150px;           
+    display: inline-block;
+    margin-left: 20px;
+    text-align: center;
+    font-size: 25px; 
+}
 #composeButton:hover {
     font-weight: bold;
+    cursor: pointer;
+
+}
+
+
+#moveToButton{
+        width: 150px;           
+
+    position: relative;
+    display: inline-block;
+    margin-left: 130px;
+    text-align: center;
+    font-size: 25px; 
 }
 
 #moveToButton:hover{
     font-weight: bold;
+    cursor: pointer;
+    
 }
-.arrows{
+#arrows{
+    position: relative;
+    top: 8px;
+    display: inline-block;
+    float: right;
+    margin-right: 50px;
+}
+    
+.arrow{
+
     user-select: none;
     float: right;
     outline: none;
@@ -112,13 +150,11 @@ span {
     transform: scale(1.5);
     margin-left: 10px;
 }
-.arrows:focus{
+.arrow:focus{
     outline: none;
-
 }
 
-.arrows:hover {
-    
+.arrow:hover {
     color: teal;
     cursor: pointer;
     transform: scale(1.8);
@@ -131,9 +167,7 @@ span {
     display: flex;
 }
 
-#mailbox {
-    text-align: center;
-    font-size: 25px;
+#mailbox {  
     flex:10%;
     padding: 20px;
     padding-top: 30px;
@@ -143,25 +177,32 @@ span {
 }
 
 .mailbox-button {
-    margin: auto;
+    width: 150px;
+    text-align: center;
+    font-size: 25px;    
+    display: inline-block;
     border-bottom: 3px solid;
     border-bottom-color: transparent;
-    text-align: center;
-    vertical-align: middle;
-    line-height: 30px;  
-    display: block;
-    height: 30px;
+    text-align: left;
     margin-bottom: 20px;
-/*    background-color: bisque;*/
+    margin-left: 20px;
 }
 .mailbox-button:hover {
     cursor: pointer;
-    border-bottom: 3px solid;
-        
+    font-weight: bold;  
 }
 
-.selected {
+i{
+    text-align: center;
+    width: 30px;
+    height: 30px;
+}
+
+.selected:hover {
     font-weight: bold;
+    color: teal;
+}
+.selected {
     color: teal;
 }
 

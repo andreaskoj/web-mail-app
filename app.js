@@ -4,7 +4,7 @@ var monk = require('monk');
 var db = monk('localhost:27017/data');
 
 // constants
-var EMAILS_ON_PAGE = 4;
+var EMAILS_ON_PAGE = 3;
 
 var server = app.listen(8081, function () {
   var host = server.address().address;
@@ -48,6 +48,12 @@ app.get('/getmail', function(req, res){
             res.send(docs);
         } else console.log(err);
     });
+});
+
+app.get('/sendemail', function(req,res){
+    console.log("fired");   
+    console.log(req);
+    
 });
 
 
