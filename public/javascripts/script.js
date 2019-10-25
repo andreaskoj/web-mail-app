@@ -1,4 +1,5 @@
 // global list with email IDs from current scope
+var emailListID = [];
 var emailList = [];
 var currentPage = 1;
 var pagesQty;
@@ -13,6 +14,12 @@ function openMail(emailID) {
 
             $("#loading").hide();
             $("#mail").append(emailContentResponseHTML(data));
+            
+            var currentID = $("#hiddenID").html();
+            var currentPostion = emailListID.indexOf(currentID);
+            var emailListLen = emailList.length;
+            
+            console.log("POS: " + currentPostion +"| LEN: " + (emailListLen-1));
         });
 };
 
@@ -20,12 +27,12 @@ function emailContentResponseHTML(data){
     
     var responseString = "";
     responseString += "<div id='mailContent' class='box'>"
-    responseString += "<p>"+data[0]['title']+"</p>";
-    responseString += "<p>"+data[0]['time']+"</p>";
-    responseString += "<p>"+data[0]['sender']+"</p>";
-    responseString += "<p>"+data[0]['recipient']+"</p>";
-    responseString += "<p>"+data[0]['content']+"</p>";
-    responseString += "<p id='hiddenID'>"+data[0]['_id']+"</p>";    
+    responseString += "<p>"+data['title']+"</p>";
+    responseString += "<p>"+data['time']+"</p>";
+    responseString += "<p>"+data['sender']+"</p>";
+    responseString += "<p>"+data['recipient']+"</p>";
+    responseString += "<p>"+data['content']+"</p>";
+    responseString += "<p id='hiddenID'>"+data['_id']+"</p>";    
     responseString += "</div>";
     return responseString;      
 }; 
@@ -86,19 +93,25 @@ $(document).ready(function(){
         retriveEmailList("Trash");
     }); 
 
-    //previous button implementation
+    //previous button behaviour implementation
     $("#previousButton").click(function(){
         
         if($("#mailContent").length){
             var currentID = $("#hiddenID").html();
             var currentPostion = emailList.indexOf(currentID);
             var emailListLen = emailList.length;
-            console.log("cp -> " + currentPostion);
-            console.log("len -> " + 0);
             if(currentPostion == 0){
+                console.log("no previous page");
+                
                 return;
+                
+                // if its the first page, don't fetch previous
+                if(currentPage == 1){
+                    console.log("no more pages <-")
+
+                    return;
+                }
             }
-            console.log("and here");
 
             $.get("getmail?id="+emailList[currentPostion-1], function(data){
                     $(".box").remove();
@@ -116,31 +129,52 @@ $(document).ready(function(){
         }
     });
     
+    // next button behaviour implementation
     $("#nextButton").click(function(){
         if($("#mailContent").length){
 
             var currentID = $("#hiddenID").html();
-            var currentPostion = emailList.indexOf(currentID);
+            var currentPostion = emailListID.indexOf(currentID);
             var emailListLen = emailList.length;
-            
-            if(currentPostion + 1 >= emailListLen){
-                return;
+                                console.log(emailList);
+
+            if(currentPostion == emailListLen-1) {
+                
+                if(currentPage ==pagesQty){
+                    return;
+                }
+                console.log("this is lat page");
+                currentPage++;
+                $.get("retriveemaillist?type="+currentMailbox+"&page="+currentPage, function(data){
+                        emailList = data["response"];
+                    
+                // update ids
+                emailListID=[];
+                data["response"].forEach(function(element){
+                    emailListID.push(element['_id']);
+                }) 
+                    console.log(emailList);
+                        $(".box").remove();
+                      $("#mail").append(emailContentResponseHTML(emailList[0]));   
+                });
             }
             
-            $.get("getmail?id="+emailList[currentPostion+1], function(data){
-                    $(".box").remove();
-                    $("#mail").append(emailContentResponseHTML(data));
-                  })
+            else{
+                $(".box").remove();
+                $("#mail").append(emailContentResponseHTML(emailList[currentPostion+1]));            
+                console.log("POS: " + (currentPostion+1) +"| LEN: " + (emailListLen-1));
+            }
         }
 
         else {
+            console.log("lol");
             if(currentPage == pagesQty){
                 return;
             }
             // increment page number 
             currentPage ++;
             $(".box").remove();
-            retriveEmailList(currentMailbox);
+//            retriveEmailList(currentMailbox);
         }  
     });
  
@@ -161,16 +195,15 @@ $(document).ready(function(){
 
             responseString += "<li><input type='checkbox'><div class='email-line' onclick='openMail("+emaiID+")' ><span>";
             responseString += email['recipient'];
-            responseString +="</span><span>"
+            responseString +="</span><span>";
             responseString += email['title'];
-            responseString +="</span><span>"
+            responseString +="</span><span>";
             responseString += email['time'];
             responseString +="</span></div>";
             responseString += "</li>";
         }
         
-        responseString += "</ul>";
-                
+        responseString += "</ul>";                
         return responseString;
     };  
     
@@ -180,14 +213,17 @@ $(document).ready(function(){
             $("#loading").hide();
             
             // update ids
-            emailList=[];
+            emailListID=[];
             data["response"].forEach(function(element){
-                emailList.push(element['_id']);
+                emailListID.push(element['_id']);
             }) 
+            
+            emailList = data["response"];
             
             pagesQty = data["pagesQty"]; $("#mail").append(emailListResponseHTML(data["response"]));
         });
     };
+    
     
     
 

@@ -4,7 +4,7 @@ var monk = require('monk');
 var db = monk('localhost:27017/data');
 
 // constants
-var EMAILS_ON_PAGE = 3;
+var EMAILS_ON_PAGE = 4;
 
 var server = app.listen(8081, function () {
   var host = server.address().address;
@@ -43,7 +43,7 @@ app.get('/getmail', function(req, res){
     var collection = db.get('emailList');
     var id = req.query.id;
 
-    collection.find({_id: id }, {}, function(err, docs){
+    collection.findOne({_id: id }, {}, function(err, docs){
         if (err === null){
             res.send(docs);
         } else console.log(err);
