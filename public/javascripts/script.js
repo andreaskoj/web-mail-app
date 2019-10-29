@@ -1,11 +1,12 @@
 // global list with email IDs from current scope
+var currentUserEmail = "kojandreas@gmail.com";
 var emailListID = [];
 var emailList = [];
 var currentPage = 1;
 var pagesQty;
 var currentMailbox = "";
 var composeHTML = 
-    "<div class='box'><h3>Compose a new email</h3> To:<textarea id='taTo'></textarea> <br>Subject:<textarea id='taSubject'></textarea><br><textarea id='taContent'></textarea><br><button id='btSend'>Send</button></div>"
+    "<div class='box'><h3>Compose a new email</h3> To:<textarea id='taTo'>nick@cs.hku.hk</textarea> <br>Subject:<textarea id='taSubject'>TEST SUBJECT</textarea><br><textarea id='taContent'>TEST MESSAGE CONTENT</textarea><br><button id='btSend'>Send</button></div>"
 
 function openMail(emailID) {
 
@@ -50,17 +51,21 @@ $(document).ready(function(){
 
             console.log(to);
             console.log(subject);
-            console.log(content);
         
-        $.post( "sendemail", { to: to, subject: subject, content: content}, function(data){
+        $.post("sendemail", { to: to, subject: subject, content: content, from: currentUserEmail}, function(data){
             
-            
+                $(".box").remove();
+                retriveEmailList(currentMailbox);
+                $("#arrows").show();
+                $("#moveToButton").show(); 
             });
     });
     
     $("#composeButton").click(function(){
         $(".box").remove();
-        $("#mail").append(composeHTML);
+        $("#arrows").hide();
+        $("#moveToButton").hide();
+        $("#mail").append(composeHTML);        
     });    
 
     $("#moveToButton").click(function(){
@@ -73,7 +78,8 @@ $(document).ready(function(){
         $("#mailbox>div").removeClass("selected");
         $(this).addClass("selected");
         $(".box").remove();
-
+        $("#arrows").show();
+        $("#moveToButton").show(); 
         retriveEmailList("Inbox");
     });   
 
@@ -82,7 +88,8 @@ $(document).ready(function(){
         $("#mailbox>div").removeClass("selected");
         $(this).addClass("selected");
         $(".box").remove();
-
+        $("#arrows").show();
+        $("#moveToButton").show(); 
         retriveEmailList("Important");
     });    
 
@@ -91,7 +98,8 @@ $(document).ready(function(){
         $("#mailbox>div").removeClass("selected");
         $(this).addClass("selected");
         $(".box").remove();
-
+        $("#arrows").show();
+        $("#moveToButton").show(); 
         retriveEmailList("Sent");
     });     
 
@@ -100,7 +108,8 @@ $(document).ready(function(){
         $("#mailbox>div").removeClass("selected");
         $(this).addClass("selected");
         $(".box").remove();
-        
+        $("#arrows").show();
+        $("#moveToButton").show();         
         retriveEmailList("Trash");
     }); 
 

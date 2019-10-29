@@ -50,11 +50,33 @@ app.get('/getmail', function(req, res){
     });
 });
 
-app.get('/sendemail', function(req,res){
-    console.log("fired");   
-    console.log(req);
+app.post('/sendemail', express.urlencoded({extended: true}), function(req,res){
+    var db = req.db;
+    var collection = db.get('emailList');
+    
+    collection.insert({'sender':req.body.from, 'recipient': req.body.to, 'title':req.body.subject, 'time': getDatestamp(), 'content': req.body.content, 'mailbox':'Sent'}, function(){
+        console.log("mail added");
+    }); 
+    
+    console.log(req.body.to);
+    console.log(req.body.from);
+    console.log(req.body.subject);
+    console.log(req.body.content);
+    console.log(getDatestamp());
+    
+    //sending empty response if added to the databse 
+    res.end();
     
 });
-
-
+//20:32:01 Fri Oct 11 2019
+function getDatestamp(){
+    var currentDateString = "";
+    var datestamp = new Date();
+    var time = datestamp.toTimeString();
+    
+    currentDateString += time.substr(0, time.indexOf(" ")) + " ";
+    currentDateString += datestamp.toDateString()
+    
+    return currentDateString;
+}
 
