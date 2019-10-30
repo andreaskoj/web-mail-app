@@ -4,7 +4,7 @@ var monk = require('monk');
 var db = monk('localhost:27017/data');
 
 // constants
-var EMAILS_ON_PAGE = 3;
+const EMAILS_ON_PAGE = 3;
 
 var server = app.listen(8081, function () {
   var host = server.address().address;
@@ -65,10 +65,35 @@ app.post('/sendemail', express.urlencoded({extended: true}), function(req,res){
     console.log(getDatestamp());
     
     //sending empty response if added to the databse 
-    res.end();
+    res.end();  
     
 });
-//20:32:01 Fri Oct 11 2019
+
+app.post('/changeemailbox', express.urlencoded({extended:true}), function(req,res){
+    var db = req.db;
+    var collection = db.get('emailList');
+//    var ids = JSON.parse(req.body.id);
+    var ids = req.body.id;
+    var newBox = req.body.newEmailBox;
+    
+//    console.log(ids[0]);
+//    console.log(newBox); 
+    
+//    ids.forEach(function(element){
+//        console.log(element);
+        
+//        collection.findOne({_id: ids[0] }, {}, function(err, docs){
+//            if (err === null){
+//                console.log(docs);
+//            } else console.log(err);
+//        });
+//    });
+//    collection.update({_id: ids, mailbox: newBox});
+    
+    res.end(); 
+});
+
+//returns a date stamp in following format eg. 20:32:01 Fri Oct 11 2019
 function getDatestamp(){
     var currentDateString = "";
     var datestamp = new Date();

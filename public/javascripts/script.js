@@ -1,5 +1,6 @@
 // global list with email IDs from current scope
 var currentUserEmail = "kojandreas@gmail.com";
+var mailboxesList = ["Inbox","Important","Sent","Trash"]
 var emailListID = [];
 var emailList = [];
 var currentPage = 1;
@@ -61,17 +62,46 @@ $(document).ready(function(){
             });
     });
     
+    $("#mailbox-1").click(function(){
+        var mailboxName = $(this).text();
+        var idsToMove =[];
+        $("#mailList input").each(function(){
+            
+            if($(this).is(':checked')){
+                var checkedEmail = $(this).parent().children()[1];  
+                
+                idsToMove.push($(checkedEmail).attr("emailID"));
+                
+                // reload the email list 
+                $(this).parent().remove();
+            }; 
+        });
+        
+        console.log(idsToMove);
+        if(idsToMove.length > 0){
+            $.post("changeemailbox", { id: idsToMove, newEmailBox: mailboxName}, function(data){
+            
+                console.log("Updating mailbox!");
+            });
+        }
+        
+        console.log(idsToMove.length);
+    });     
+    
+    $("#mailbox-2").click(function(){
+        console.log($(this).text());
+    });     
+    
+    $("#mailbox-3").click(function(){
+        console.log($(this).text());
+    }); 
+    
     $("#composeButton").click(function(){
         $(".box").remove();
         $("#arrows").hide();
         $("#moveToButton").hide();
         $("#mail").append(composeHTML);        
-    });    
-
-    $("#moveToButton").click(function(){
-        console.log("test moveTo");  
-        console.log(global);
-    });    
+    });      
     
     $("#inboxButton").click(function(){
         currentPage=1;
@@ -187,7 +217,6 @@ $(document).ready(function(){
             else{
                 $(".box").remove();
                 $("#mail").append(emailContentResponseHTML(emailList[currentPostion+1]));            
-
             }
         }
 
@@ -195,6 +224,7 @@ $(document).ready(function(){
             if(currentPage == pagesQty){
                 return;
             }
+            
             // increment page number 
             currentPage ++;
             $(".box").remove();
@@ -217,7 +247,7 @@ $(document).ready(function(){
             emaiID += email["_id"];
             emaiID += '"';
 
-            responseString += "<li><input type='checkbox'><div class='email-line' onclick='openMail("+emaiID+")' ><span>";
+            responseString += "<li><input type='checkbox'><div class='email-line' emailID = '"+emaiID+"' onclick='openMail("+emaiID+")' ><span>";
             responseString += email['recipient'];
             responseString +="</span><span>";
             responseString += email['title'];
@@ -232,6 +262,7 @@ $(document).ready(function(){
     
     function retriveEmailList(type){
         currentMailbox = type;
+        updateDropdown();
         $.get("retriveemaillist?type="+type+"&page=" +currentPage, function(data){
             $("#loading").hide();
             
@@ -246,6 +277,18 @@ $(document).ready(function(){
             pagesQty = data["pagesQty"]; $("#mail").append(emailListResponseHTML(data["response"]));
         });
     };
+    
+    function updateDropdown(){ 
+        
+        var moveToMailboxes = mailboxesList.filter(word => word != currentMailbox)
+                
+        var index = 0;
+        $(".dropdown-item div").each(function(){
+            
+            $(this).text(moveToMailboxes[index]);
+            index ++;
+        });
+    } 
 
 });
 
