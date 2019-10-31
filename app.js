@@ -27,6 +27,7 @@ app.get('/retriveemaillist', function(req, res){
        
     collection.find({mailbox: type}, {}, function(err, docs){
         if (err === null){
+            
             // slice to get only one page, due to limited functionality of monk library I have to retive the whole collection and then trim it. 
             var page = docs.slice(EMAILS_ON_PAGE*(pageNo-1),EMAILS_ON_PAGE*pageNo)
             var pagesQty = Math.ceil(docs.length / EMAILS_ON_PAGE);
@@ -55,24 +56,16 @@ app.post('/sendemail', express.urlencoded({extended: true}), function(req,res){
     var collection = db.get('emailList');
     
     collection.insert({'sender':req.body.from, 'recipient': req.body.to, 'title':req.body.subject, 'time': getDatestamp(), 'content': req.body.content, 'mailbox':'Sent'}, function(){
-        console.log("mail added");
     }); 
     
-    console.log(req.body.to);
-    console.log(req.body.from);
-    console.log(req.body.subject);
-    console.log(req.body.content);
-    console.log(getDatestamp());
-    
     //sending empty response if added to the databse 
-    res.end();  
-    
+    res.end();     
 });
 
 app.post('/changeemailbox', express.urlencoded({extended:true}), function(req,res){
     var db = req.db;
     var collection = db.get('emailList');
-//    var ids = JSON.parse(req.body.id);
+    
     var ids = req.body.id;
     var newBox = req.body.newEmailBox;
     

@@ -13,15 +13,58 @@ button {
     overflow: visible;
     background: transparent;
 }
+h3 {
+    font-size: 22px;
+}
+
+textarea {
+    border: none;
+    resize: none;
+    padding:10px;
+    background-color: gainsboro;
+    border-radius: 5px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 18px;
+    height: 28px;
+    margin-bottom: 30px;
+    width: -webkit-calc(100% - 60px);
+    width:    -moz-calc(100% - 60px);
+    width:         calc(100% - 60px);
+}
+
+#taContent{
+    height: 200px;
+}
+
+#btSend{
+    background-color: gainsboro;
+    border-radius: 5px;
+    padding: 10px;
+    font-family: 'Nunito', sans-serif;
+    -webkit-box-shadow: 5px 5px 10px 0px rgba(179,179,179,0.67);
+    -moz-box-shadow: 5px 5px 10px 0px rgba(179,179,179,0.67);
+    box-shadow: 5px 5px 10px 0px rgba(179,179,179,0.67);
+}
+
+#btSend:hover{
+    font-weight: bold;
+    cursor: pointer;
+}
+
+input[type="checkbox"]:focus{
+    outline:0;
+}
+
+input[type="checkbox"]{
+    width: 15px; /*Desired width*/
+    height: 15px; /*Desired height*/
+    cursor: pointer;
+    margin-right: 10px;    
+}
 
 .box{
     margin-left: 50px;
     margin-top: 30px;
-}
-
-input{
-    width: 30px;
-    margin: 0px;
 }
 
 ul {
@@ -56,10 +99,53 @@ li:hover {
     cursor: pointer;
 }
 
-span {
+#mailContent{
+    margin-right: 50px;
+    font-size: 22px;
+    display: block;
+}
+#mailContent div {
+    margin-bottom: 30px;
+}
+
+#emailHeader{
+    width: 100%;
+    display: inline-block;
+}
+
+#emailHeader span:first-child{
+    font-weight: bold;
+}
+
+#emailHeader span:last-child{
+    float: right;
+    font-weight: bold;
+}
+
+#emailHeader span:nth-last-child(2){
+    float: right;
+    padding-left: 10px;
+}
+
+#emailSender span:first-child{
+        font-weight: bold;
+
+}
+#emailReceiver span:first-child{
+        font-weight: bold;
+
+}
+#emailContent span:first-child{
+        font-weight: bold;
+
+}
+
+
+#mailList span {
     display: inline-block;
     width: 300px;
 }
+
 
 #heading{
     user-select: none;
@@ -171,13 +257,6 @@ span {
     font-size: 25px; 
 }
 
-/*
-#moveToButton:hover{
-    font-weight: bold;
-    cursor: pointer;
-    
-}
-*/
 #arrows{
     position: relative;
     top: 8px;

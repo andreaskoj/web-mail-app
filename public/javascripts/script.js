@@ -1,4 +1,4 @@
-// global list with email IDs from current scope
+// global variables
 var currentUserEmail = "kojandreas@gmail.com";
 var mailboxesList = ["Inbox","Important","Sent","Trash"]
 var emailListID = [];
@@ -7,7 +7,7 @@ var currentPage = 1;
 var pagesQty;
 var currentMailbox = "";
 var composeHTML = 
-    "<div class='box'><h3>Compose a new email</h3> To:<textarea id='taTo'>nick@cs.hku.hk</textarea> <br>Subject:<textarea id='taSubject'>TEST SUBJECT</textarea><br><textarea id='taContent'>TEST MESSAGE CONTENT</textarea><br><button id='btSend'>Send</button></div>"
+    "<div class='box'><h3>Compose a new email</h3><textarea id='taTo' rows='1' cols='40' placeholder='To:'></textarea><textarea id='taSubject' rows='1' placeholder='Subject:'></textarea><textarea id='taContent' rows='40' placeholder='Message:'></textarea><button id='btSend'>Send</button></div>"
 
 function openMail(emailID) {
 
@@ -27,31 +27,24 @@ function emailContentResponseHTML(data){
     
     var responseString = "";
     responseString += "<div id='mailContent' class='box'>"
-    responseString += "<p>"+data['title']+"</p>";
-    responseString += "<p>"+data['time']+"</p>";
-    responseString += "<p>"+data['sender']+"</p>";
-    responseString += "<p>"+data['recipient']+"</p>";
-    responseString += "<p>"+data['content']+"</p>";
-    responseString += "<p id='hiddenID'>"+data['_id']+"</p>";    
+    responseString += "<div id='emailHeader'><span>Subject: </span><span>"+data['title']+"</span>";
+    responseString += "<span>"+data['time']+"</span><span>Time:</span></div>";
+    responseString += "<div id='emailSender'><span>Sender: </span><span>"+data['sender']+"</span></div>";
+    responseString += "<div id='emailReceiver'><span>Receiver: </span><span>"+data['recipient']+"</span></div>";
+    responseString += "<div id='emailContent'><span>Content: </span><span>"+data['content']+"</span></div>";
+    responseString += "<span id='hiddenID'>"+data['_id']+"</span>";    
     responseString += "</div>";
     return responseString;      
 }; 
 
 $(document).ready(function(){
     
-    // retrive initial email llist
-    retriveEmailList("Inbox");
-    $("#inboxButton").addClass("selected");    
-
     //dynamically generated object;
     $('#mail').on('click', '#btSend', function() {
         
            var to = $("#taTo").val();
            var subject = $("#taSubject").val();
            var content = $("#taContent").val();
-
-            console.log(to);
-            console.log(subject);
         
         $.post("sendemail", { to: to, subject: subject, content: content, from: currentUserEmail}, function(data){
             
@@ -61,7 +54,8 @@ $(document).ready(function(){
                 $("#moveToButton").show(); 
             });
     });
-    
+
+    // assign event listeners to dropdown list elements
     $( ".dropdown-item div" ).on( "click", function() {
         var mailboxName = $(this).text();
         var idsToMove =[];
@@ -74,9 +68,7 @@ $(document).ready(function(){
                 idsToMove.push(checkEmailID);                
             }; 
         });     
-        
-        console.log(idsToMove);
-        
+                
         if(idsToMove.length > 0){
             $.post("changeemailbox", { id: idsToMove, newEmailBox: mailboxName}, function(data){
             
@@ -88,47 +80,12 @@ $(document).ready(function(){
         
         console.log(idsToMove.length);
     });
-    
-//    $("#mailbox-1").click(function(){
-//        var mailboxName = $(this).text();
-//        var idsToMove =[];
-//        $("#mailList input").each(function(){
-//            
-//            if($(this).is(':checked')){
-//                var checkedEmail = $(this).parent().children()[1];  
-//                var checkEmailID = $(checkedEmail).attr("emailID")
-//
-//                idsToMove.push(checkEmailID);                
-//            }; 
-//        });     
-//        
-//        console.log(idsToMove);
-//        
-//        if(idsToMove.length > 0){
-//            $.post("changeemailbox", { id: idsToMove, newEmailBox: mailboxName}, function(data){
-//            
-//                // update current mailbox
-//                $(".box").remove();
-//                retriveEmailList(currentMailbox);
-//            });
-//        }
-//        
-//        console.log(idsToMove.length);
-//    });     
-//    
-//    $("#mailbox-2").click(function(){
-//        console.log($(this).text());
-//    });     
-//    
-//    $("#mailbox-3").click(function(){
-//        console.log($(this).text());
-//    }); 
-    
+        
     $("#composeButton").click(function(){
         $(".box").remove();
         $("#arrows").hide();
         $("#moveToButton").hide();
-        $("#mail").append(composeHTML);        
+        $("#mail").append(composeHTML); 
     });      
     
     $("#inboxButton").click(function(){
@@ -136,17 +93,15 @@ $(document).ready(function(){
         $("#mailbox>div").removeClass("selected");
         $(this).addClass("selected");
         $(".box").remove();
-        $("#arrows").show();
-        $("#moveToButton").show(); 
+        $("#moveToButton").show();         
         retriveEmailList("Inbox");
-    });   
-
+    });
+    
     $("#importantButton").click(function(){
         currentPage=1;
         $("#mailbox>div").removeClass("selected");
         $(this).addClass("selected");
         $(".box").remove();
-        $("#arrows").show();
         $("#moveToButton").show(); 
         retriveEmailList("Important");
     });    
@@ -156,7 +111,6 @@ $(document).ready(function(){
         $("#mailbox>div").removeClass("selected");
         $(this).addClass("selected");
         $(".box").remove();
-        $("#arrows").show();
         $("#moveToButton").show(); 
         retriveEmailList("Sent");
     });     
@@ -166,7 +120,6 @@ $(document).ready(function(){
         $("#mailbox>div").removeClass("selected");
         $(this).addClass("selected");
         $(".box").remove();
-        $("#arrows").show();
         $("#moveToButton").show();         
         retriveEmailList("Trash");
     }); 
@@ -182,7 +135,6 @@ $(document).ready(function(){
             if(currentPostion == 0){
                                 
                 if(currentPage == 1){
-
                     return;
                 }
                 
@@ -260,6 +212,9 @@ $(document).ready(function(){
         }  
     });
  
+    // triggers clicking on the inboxButton (initialize the app)
+    $( "#inboxButton" ).trigger( "click");
+
     // create list of emails view
     function emailListResponseHTML(data) {
 
@@ -301,8 +256,16 @@ $(document).ready(function(){
             }) 
             
             emailList = data["response"];
+            pagesQty = data["pagesQty"]; 
             
-            pagesQty = data["pagesQty"]; $("#mail").append(emailListResponseHTML(data["response"]));
+            $("#mail").append(emailListResponseHTML(data["response"]));
+            
+            if(pagesQty==1){
+                $("#arrows").hide();
+            }
+            else{
+                $("#arrows").show();
+            }
         });
     };
     
@@ -317,6 +280,5 @@ $(document).ready(function(){
             index ++;
         });
     } 
-
 });
 
