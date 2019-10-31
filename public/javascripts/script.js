@@ -1,3 +1,16 @@
+/*
+
+Future outlook (things that could be implemented):
+
+- all textareas before sending to the server should be santitized 
+- sent mails dont't parse special characters
+- fetched list of mails is not in the the order from the newest to oldest 
+- js client code could be optimised, there is still quite a lot redundacy
+- ui for smaller screens could be imporved 
+- email adress format should be checked and the user should be informed about incorrect format
+- the app should be tested with diffrent length of data fetched from the database to check if the UI is still concise. 
+*/
+
 // global variables
 var currentUserEmail = "kojandreas@gmail.com";
 var mailboxesList = ["Inbox","Important","Sent","Trash"]

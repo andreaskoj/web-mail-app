@@ -3,7 +3,7 @@ var app = express();
 var monk = require('monk');
 var db = monk('localhost:27017/data');
 
-// constants
+// to change number of emails on a page
 const EMAILS_ON_PAGE = 5;
 
 var server = app.listen(8081, function () {
@@ -87,4 +87,3 @@ function getDatestamp(){
     
     return currentDateString;
 }
-
