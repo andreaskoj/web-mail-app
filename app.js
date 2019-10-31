@@ -4,7 +4,7 @@ var monk = require('monk');
 var db = monk('localhost:27017/data');
 
 // constants
-const EMAILS_ON_PAGE = 3;
+const EMAILS_ON_PAGE = 5;
 
 var server = app.listen(8081, function () {
   var host = server.address().address;
@@ -76,19 +76,9 @@ app.post('/changeemailbox', express.urlencoded({extended:true}), function(req,re
     var ids = req.body.id;
     var newBox = req.body.newEmailBox;
     
-//    console.log(ids[0]);
-//    console.log(newBox); 
-    
-//    ids.forEach(function(element){
-//        console.log(element);
-        
-//        collection.findOne({_id: ids[0] }, {}, function(err, docs){
-//            if (err === null){
-//                console.log(docs);
-//            } else console.log(err);
-//        });
-//    });
-//    collection.update({_id: ids, mailbox: newBox});
+    ids.forEach(function(element){  
+        collection.update({_id: element}, { $set: { mailbox: newBox }});       
+    });
     
     res.end(); 
 });

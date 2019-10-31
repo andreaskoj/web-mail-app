@@ -62,39 +62,67 @@ $(document).ready(function(){
             });
     });
     
-    $("#mailbox-1").click(function(){
+    $( ".dropdown-item div" ).on( "click", function() {
         var mailboxName = $(this).text();
         var idsToMove =[];
         $("#mailList input").each(function(){
             
             if($(this).is(':checked')){
                 var checkedEmail = $(this).parent().children()[1];  
-                
-                idsToMove.push($(checkedEmail).attr("emailID"));
-                
-                // reload the email list 
-                $(this).parent().remove();
+                var checkEmailID = $(checkedEmail).attr("emailID")
+
+                idsToMove.push(checkEmailID);                
             }; 
-        });
+        });     
         
         console.log(idsToMove);
+        
         if(idsToMove.length > 0){
             $.post("changeemailbox", { id: idsToMove, newEmailBox: mailboxName}, function(data){
             
-                console.log("Updating mailbox!");
+                // update current mailbox
+                $(".box").remove();
+                retriveEmailList(currentMailbox);
             });
         }
         
         console.log(idsToMove.length);
-    });     
+    });
     
-    $("#mailbox-2").click(function(){
-        console.log($(this).text());
-    });     
-    
-    $("#mailbox-3").click(function(){
-        console.log($(this).text());
-    }); 
+//    $("#mailbox-1").click(function(){
+//        var mailboxName = $(this).text();
+//        var idsToMove =[];
+//        $("#mailList input").each(function(){
+//            
+//            if($(this).is(':checked')){
+//                var checkedEmail = $(this).parent().children()[1];  
+//                var checkEmailID = $(checkedEmail).attr("emailID")
+//
+//                idsToMove.push(checkEmailID);                
+//            }; 
+//        });     
+//        
+//        console.log(idsToMove);
+//        
+//        if(idsToMove.length > 0){
+//            $.post("changeemailbox", { id: idsToMove, newEmailBox: mailboxName}, function(data){
+//            
+//                // update current mailbox
+//                $(".box").remove();
+//                retriveEmailList(currentMailbox);
+//            });
+//        }
+//        
+//        console.log(idsToMove.length);
+//    });     
+//    
+//    $("#mailbox-2").click(function(){
+//        console.log($(this).text());
+//    });     
+//    
+//    $("#mailbox-3").click(function(){
+//        console.log($(this).text());
+//    }); 
     
     $("#composeButton").click(function(){
         $(".box").remove();
@@ -247,7 +275,7 @@ $(document).ready(function(){
             emaiID += email["_id"];
             emaiID += '"';
 
-            responseString += "<li><input type='checkbox'><div class='email-line' emailID = '"+emaiID+"' onclick='openMail("+emaiID+")' ><span>";
+            responseString += "<li><input type='checkbox'><div class='email-line' emailID = "+emaiID+" onclick='openMail("+emaiID+")' ><span>";
             responseString += email['recipient'];
             responseString +="</span><span>";
             responseString += email['title'];
